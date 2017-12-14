@@ -10,6 +10,7 @@ import (
 
 	"github.com/evalphobia/logrus_sentry"
 	log "github.com/sirupsen/logrus"
+	suture "gopkg.in/thejerf/suture.v2"
 )
 
 func setupLogger() {
@@ -42,4 +43,19 @@ func setupLogger() {
 
 func main() {
 	setupLogger()
+
+	// setup supervisor system
+	spec := suture.Spec{
+		Log: func(l string) {
+			log.Infoln(l)
+		},
+	}
+
+	sv := suture.New("mify", spec)
+	sv.ServeBackground()
+	log.Info("suture running")
+
+	// now start up all needed clients
+	// this is done via ssh, even for localhost instances.
+	// make sure to
 }
